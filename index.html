@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gabungplease — Professional Data Consolidation</title>
+  <meta name="description" content="Merge hundreds of Excel and CSV files into one clean dataset in seconds. Built for Indonesian data professionals." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal:        #1a9e96;
+      --teal-bright: #4ecdc4;
+      --teal-dim:    #0e4e4b;
+      --teal-glow:   rgba(26, 158, 150, 0.18);
+      --surface:     #111111;
+      --card:        #181818;
+      --card2:       #1e1e1e;
+      --border:      rgba(255,255,255,0.07);
+      --text:        #e8e8e8;
+      --text-dim:    #888888;
+      --text-muted:  #555555;
+      --amber:       #c07818;
+      --green:       #28a745;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--surface);
+      color: var(--text);
+      font-family: 'Instrument Sans', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    /* ── GRID BACKGROUND ── */
+    .grid-bg {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 48px 48px;
+      z-index: 0;
+      mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 0%, transparent 70%);
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 48px;
+      background: rgba(17,17,17,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      color: var(--teal-bright);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--teal-bright); }
+
+    .nav-dl {
+      background: var(--teal);
+      color: white;
+      text-decoration: none;
+      padding: 8px 20px;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .nav-dl:hover { background: #15807a; transform: translateY(-1px); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--teal-glow);
+      border: 1px solid rgba(26,158,150,0.3);
+      border-radius: 999px;
+      padding: 6px 16px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--teal-bright);
+      letter-spacing: 0.08em;
+      margin-bottom: 36px;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .badge-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--teal-bright);
+      animation: pulse 2s ease infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.7); }
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(3rem, 9vw, 7rem);
+      font-weight: 500;
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+      margin-bottom: 12px;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+
+    .h1-teal { color: var(--teal-bright); }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: var(--text-dim);
+      max-width: 360px;
+      margin: 20px auto 48px;
+      line-height: 1.9;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+      animation: fadeUp 0.6s 0.3s ease both;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--teal);
+      color: white;
+      text-decoration: none;
+      padding: 14px 32px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 0 0 0 rgba(26,158,150,0);
+    }
+
+    .btn-primary:hover {
+      background: #15807a;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(26,158,150,0.3);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: transparent;
+      color: var(--text-dim);
+      text-decoration: none;
+      padding: 14px 32px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 500;
+      border: 1px solid var(--border);
+      transition: border-color 0.2s, color 0.2s, transform 0.15s;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--teal);
+      color: var(--teal-bright);
+      transform: translateY(-2px);
+    }
+
+    /* ── MOCKUP ── */
+    .mockup-wrap {
+      position: relative;
+      z-index: 1;
+      margin: 72px auto 0;
+      max-width: 780px;
+      padding: 0 24px;
+      animation: fadeUp 0.7s 0.4s ease both;
+    }
+
+    .mockup-glow {
+      position: absolute;
+      top: -60px; left: 50%;
+      transform: translateX(-50%);
+      width: 500px; height: 200px;
+      background: radial-gradient(ellipse, rgba(26,158,150,0.22) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .mockup-window {
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 40px 100px rgba(0,0,0,0.6), 0 0 0 1px rgba(26,158,150,0.08);
+    }
+
+    .mockup-bar {
+      background: #141414;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot-r { background: #ff5f57; }
+    .dot-y { background: #ffbd2e; }
+    .dot-g { background: #28c840; }
+
+    .mockup-bar-title {
+      flex: 1;
+      text-align: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .mockup-body {
+      padding: 28px 28px 20px;
+    }
+
+    /* mini UI inside mockup */
+    .m-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .m-icon {
+      width: 40px; height: 40px;
+      background: var(--teal-dim);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .m-title-group h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: var(--teal-bright);
+    }
+
+    .m-title-group p { font-size: 0.72rem; color: var(--text-muted); }
+
+    .m-input-row {
+      display: flex;
+      align-items: center;
+      background: #141414;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 10px;
+    }
+
+    .m-input-text {
+      flex: 1;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .m-btn-sm {
+      background: var(--teal);
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 5px 14px;
+      border-radius: 5px;
+      font-family: 'Instrument Sans', sans-serif;
+    }
+
+    .m-checks {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    .m-check {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.72rem;
+      color: var(--text-dim);
+    }
+
+    .m-check-box {
+      width: 14px; height: 14px;
+      border-radius: 3px;
+      background: var(--teal);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .m-check-box svg { width: 9px; height: 9px; }
+
+    .m-progress-wrap { margin-bottom: 10px; }
+
+    .m-progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+      font-family: 'DM Mono', monospace;
+    }
+
+    .m-progress-track {
+      height: 6px;
+      background: #2a2a2a;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .m-progress-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: linear-gradient(90deg, var(--teal), var(--teal-bright));
+      width: 0%;
+      animation: progressFill 2.5s 1.2s ease forwards;
+    }
+
+    @keyframes progressFill {
+      0% { width: 0%; }
+      60% { width: 72%; }
+      100% { width: 100%; }
+    }
+
+    .m-merge-btn {
+      width: 100%;
+      background: var(--teal);
+      color: white;
+      text-align: center;
+      padding: 11px;
+      border-radius: 8px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── STATS ── */
+    .stats-row {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      max-width: 700px;
+      margin: 64px auto 0;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--card);
+    }
+
+    .stat {
+      flex: 1;
+      text-align: center;
+      padding: 28px 20px;
+      border-right: 1px solid var(--border);
+    }
+
+    .stat:last-child { border-right: none; }
+
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 2rem;
+      font-weight: 500;
+      color: var(--teal-bright);
+      line-height: 2;
+      margin-bottom: 6px;
+    }
+
+    .stat-label {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+    }
+
+    /* ── SECTIONS ── */
+    section {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 96px 24px;
+    }
+
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--teal);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 500;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+
+    .section-desc {
+      color: var(--text-dim);
+      max-width: 500px;
+      line-height: 1.7;
+    }
+
+    /* ── FEATURES ── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2px;
+      margin-top: 56px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .feature-card {
+      background: var(--card);
+      padding: 32px 28px;
+      transition: background 0.2s;
+    }
+
+    .feature-card:hover { background: var(--card2); }
+
+    .feature-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      background: var(--teal-dim);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 18px;
+      font-size: 1.25rem;
+    }
+
+    .feature-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .feature-desc { font-size: 0.875rem; color: var(--text-dim); line-height: 1.6; }
+
+    /* ── HOW IT WORKS ── */
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin-top: 56px;
+    }
+
+    .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 28px 28px;
+      transition: border-color 0.2s;
+    }
+
+    .step:hover { border-color: rgba(26,158,150,0.3); }
+
+    .step-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 500;
+      color: var(--teal-dim);
+      line-height: 1;
+      min-width: 52px;
+    }
+
+    .step-content h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .step-content p { font-size: 0.875rem; color: var(--text-dim); line-height: 1.6; }
+
+    /* ── TERMINAL ── */
+    .terminal {
+      margin-top: 56px;
+      background: #0d0d0d;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .terminal-bar {
+      background: #141414;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .terminal-body {
+      padding: 24px 28px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.82rem;
+      line-height: 2;
+    }
+
+    .t-comment { color: #444; }
+    .t-cmd { color: var(--teal-bright); }
+    .t-flag { color: #c07818; }
+    .t-file { color: #e8e8e8; }
+    .t-ok { color: var(--green); }
+
+    /* ── DONATE ── */
+    .donate-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 40px;
+    }
+
+    .donate-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 22px 24px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+      border: 1px solid transparent;
+    }
+
+    .donate-card:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
+
+    .donate-trakteer {
+      background: #2a0d16;
+      color: #f7748c;
+      border-color: rgba(229, 42, 83, 0.2);
+    }
+
+    .donate-paypal {
+      background: #001740;
+      color: #6ea8fe;
+      border-color: rgba(0, 48, 135, 0.4);
+    }
+
+    .donate-icon { font-size: 1.6rem; }
+
+    .donate-meta { font-size: 0.72rem; opacity: 0.6; font-weight: 400; display: block; margin-top: 2px; }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 48px 24px;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 500;
+      color: var(--teal-bright);
+      margin-bottom: 10px;
+    }
+
+    .footer-sub {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-family: 'DM Mono', monospace;
+      margin-bottom: 24px;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      list-style: none;
+      margin-bottom: 32px;
+    }
+
+    .footer-links a {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--teal-bright); }
+
+    .footer-credit {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-family: 'DM Mono', monospace;
+    }
+
+    /* ── DIVIDER ── */
+    .teal-rule {
+      position: relative;
+      z-index: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--teal), transparent);
+      max-width: 1100px;
+      margin: 0 auto;
+      opacity: 0.4;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      nav { padding: 14px 20px; }
+      .nav-links { display: none; }
+      .donate-wrap { grid-template-columns: 1fr; }
+      .stats-row { flex-direction: column; }
+      .stat { border-right: none; border-bottom: 1px solid var(--border); }
+      .stat:last-child { border-bottom: none; }
+      .step { flex-direction: column; gap: 10px; }
+      .step-num { font-size: 1.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="grid-bg"></div>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">Gabungplease</div>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#how">How it works</a></li>
+      <li><a href="#build">Build</a></li>
+      <li><a href="#support">Support</a></li>
+    </ul>
+    <a href="https://github.com/somynameisfajar/gabungplease/releases" class="nav-dl">↓ Download</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      V1.0 PUBLIC RELEASE · WINDOWS
+    </div>
+
+    <h1>Merge files,<br><span class="h1-teal">Conveniently.</span></h1>
+
+    <p class="hero-sub">
+      Gabungplease consolidates Dozens of Excel and CSV files into one clean dataset — with duplicate removal, date standardisation, and deep XML cleaning built in.
+    </p>
+
+    <div class="hero-ctas">
+      <a href="https://github.com/somynameisfajar/gabungplease/releases" class="btn-primary">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download .exe
+      </a>
+      <a href="https://github.com/somynameisfajar/gabungplease" class="btn-secondary">
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 .3a12 12 0 0 0-3.79 23.4c.6.1.83-.26.83-.57v-2c-3.34.73-4.04-1.6-4.04-1.6-.55-1.4-1.34-1.77-1.34-1.77-1.08-.74.08-.73.08-.73 1.2.09 1.83 1.24 1.83 1.24 1.07 1.83 2.8 1.3 3.49 1 .1-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.12-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.26 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.8 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .31.21.68.82.56A12 12 0 0 0 12 .3"/></svg>
+        View Source
+      </a>
+    </div>
+
+    <!-- MOCKUP -->
+    <div class="mockup-wrap">
+      <div class="mockup-glow"></div>
+      <div class="mockup-window">
+        <div class="mockup-bar">
+          <span class="dot dot-r"></span>
+          <span class="dot dot-y"></span>
+          <span class="dot dot-g"></span>
+          <span class="mockup-bar-title">gabungplease.exe</span>
+        </div>
+        <div class="mockup-body">
+          <div class="m-header">
+            <div class="m-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4ecdc4" stroke-width="2"><rect x="2" y="3" width="7" height="9" rx="1"/><rect x="15" y="3" width="7" height="9" rx="1"/><rect x="9" y="12" width="6" height="9" rx="1"/><path d="M5.5 12v3M18.5 12v3M12 21v-3"/></svg>
+            </div>
+            <div class="m-title-group">
+              <h2>Gabungplease</h2>
+              <p>Convenient Data Consolidation Utility</p>
+            </div>
+          </div>
+
+          <div class="m-input-row">
+            <span class="m-input-text">C:\Users\Fajar\Desktop\Data_Bulanan\</span>
+            <span class="m-btn-sm">Select Folder</span>
+          </div>
+
+          <div class="m-checks">
+            <div class="m-check">
+              <div class="m-check-box"><svg viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2"><polyline points="1.5,5 4,7.5 8.5,2"/></svg></div>
+              Add Source File column
+            </div>
+            <div class="m-check">
+              <div class="m-check-box"><svg viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2"><polyline points="1.5,5 4,7.5 8.5,2"/></svg></div>
+              Deep Cleaning
+            </div>
+            <div class="m-check">
+              <div class="m-check-box" style="background:#2a2a2a;border:1px solid #333"></div>
+              Standardize Dates
+            </div>
+            <div class="m-check">
+              <div class="m-check-box"><svg viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2"><polyline points="1.5,5 4,7.5 8.5,2"/></svg></div>
+              Remove Duplicates
+            </div>
+          </div>
+
+          <div class="m-progress-wrap">
+            <div class="m-progress-label">
+              <span>Reading files…</span>
+              <span style="color:#4ecdc4">24 / 24</span>
+            </div>
+            <div class="m-progress-track">
+              <div class="m-progress-fill"></div>
+            </div>
+          </div>
+
+          <div class="m-merge-btn">CONSOLIDATE DATA</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-row">
+      <div class="stat">
+        <div class="stat-num">4+</div>
+        <div class="stat-label">File Formats</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">Dozens</div>
+        <div class="stat-label">of Files per Run</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">2</div>
+        <div class="stat-label">Languages</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">0</div>
+        <div class="stat-label">Dependencies to Install</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="teal-rule"></div>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="reveal">
+      <p class="section-label">What it does</p>
+      <h2 class="section-title">Everything you need.<br>Nothing you don't.</h2>
+      <p class="section-desc">Built for analysts who spend too much time copy-pasting files instead of actually analysing data.</p>
+    </div>
+
+    <div class="features-grid reveal">
+      <div class="feature-card">
+        <div class="feature-icon">📂</div>
+        <div class="feature-title">Multi-format support</div>
+        <p class="feature-desc">Reads .xlsx, .xls, .xlsb, and .csv in the same run. Detects delimiters automatically — no config needed.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔀</div>
+        <div class="feature-title">Parallel file reading</div>
+        <p class="feature-desc">Processes up to 6 files simultaneously. SSD Mode cranks up threads for even faster throughput on fast storage.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🧹</div>
+        <div class="feature-title">Deep XML cleaning</div>
+        <p class="feature-desc">Strips illegal XML characters and hidden line breaks that cause Excel's "Repair" prompt — silently, automatically.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📅</div>
+        <div class="feature-title">Date standardisation</div>
+        <p class="feature-desc">Detects date columns by keyword and normalises them to YYYY-MM-DD — consistent across every source file.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔍</div>
+        <div class="feature-title">Duplicate removal</div>
+        <p class="feature-desc">Drops exact duplicate rows across all files after merge, with an accurate count reported at the end.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📋</div>
+        <div class="feature-title">Schema alignment log</div>
+        <p class="feature-desc">When files have different column structures, Gabungplease auto-aligns them and writes a clear diff log to disk.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="teal-rule"></div>
+
+  <!-- HOW IT WORKS -->
+  <section id="how">
+    <div class="reveal">
+      <p class="section-label">Workflow</p>
+      <h2 class="section-title">Three steps.<br>One clean file.</h2>
+    </div>
+
+    <div class="steps reveal">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-content">
+          <h3>Select your folder</h3>
+          <p>Point Gabungplease at any folder containing your Excel or CSV files. Use the keyword filter to process only files whose names match a specific term — useful when a folder contains multiple report types.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-content">
+          <h3>Configure and consolidate</h3>
+          <p>Toggle deep cleaning, date standardisation, and duplicate removal. Click the big button. Gabungplease reads all matching files in parallel, aligns their columns automatically, and merges everything into one DataFrame.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-content">
+          <h3>Save as .xlsx or .csv</h3>
+          <p>A save dialog appears. If you don't respond within 30 seconds, it auto-saves to the source folder so nothing is lost. A summary shows total files, rows, and duplicates removed.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="teal-rule"></div>
+
+  <!-- SUPPORT -->
+  <section id="support">
+    <div class="reveal">
+      <p class="section-label">Open source · Free forever</p>
+      <h2 class="section-title">Support the work</h2>
+      <p class="section-desc">Gabungplease is free and will stay free. If it saves you an hour of copy-pasting, consider buying the developer a coffee.</p>
+    </div>
+
+    <div class="donate-wrap reveal">
+      <a href="https://trakteer.id/mynameisfajar" class="donate-card donate-trakteer" target="_blank" rel="noopener">
+        <span class="donate-icon">☕</span>
+        <div>
+          Trakteer
+          <span class="donate-meta">GoPay · OVO · Dana · QRIS</span>
+        </div>
+      </a>
+      <a href="https://www.paypal.com/ncp/payment/GQSK6BLX2YV4L" class="donate-card donate-paypal" target="_blank" rel="noopener">
+        <span class="donate-icon">🌐</span>
+        <div>
+          PayPal
+          <span class="donate-meta">International · USD</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">Gabungplease</div>
+    <div class="footer-sub">Concept by Fajar Tri Ramadhan (@somynameisfajar) · V1.0 Public Release</div>
+    <ul class="footer-links">
+      <li><a href="https://github.com/somynameisfajar/gabungplease">GitHub</a></li>
+      <li><a href="https://github.com/somynameisfajar/gabungplease/releases">Releases</a></li>
+      <li><a href="mailto:fajartriramadhan@gmail.com">Contact</a></li>
+      <li><a href="https://trakteer.id/mynameisfajar">Donate</a></li>
+    </ul>
+    <div class="footer-credit">© 2025 Fajar Tri Ramadhan · Provided AS IS · See EULA in app</div>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
