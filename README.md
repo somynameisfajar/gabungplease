@@ -1,3 +1,5 @@
+​Note: This repository hosts the website and official releases for Gabungplease. The core processing engine is currently closed-source.
+
 # gabungplease
 Convenient Data Consolidation Utility
 
