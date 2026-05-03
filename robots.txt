@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://somynameisfajar.github.io/gabungplease/sitemap.xml
