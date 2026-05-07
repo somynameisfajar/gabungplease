@@ -1,24 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-LT74LN4G0Z"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LT74LN4G0Z"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-LT74LN4G0Z');
+  </script>
 
-  gtag('config', 'G-LT74LN4G0Z');
-</script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gabungplease — Convenient Data Consolidation Tool</title>
-  <meta name="description" content="Merge dozens of Excel and CSV files into one clean dataset in seconds. Built for All of Us" />
-  <link rel="canonical" href="https://somynameisfajar.github.io/gabungplease" />
+  <meta name="description" content="Gabungkan ratusan file Excel dan CSV jadi satu dataset bersih dalam hitungan detik. 100% offline, gratis, tanpa install Python. Merge Excel files free Windows tool." />
+  <meta name="keywords" content="gabung file excel, merge excel csv offline, gabungkan data excel gratis, merge multiple excel files free, consolidate csv files windows, gabung csv tanpa internet, data consolidation tool, excel merger offline, gabungplease" />
+  <meta name="author" content="Fajar Tri Ramadhan" />
+  <meta name="robots" content="index, follow" />
+  <meta name="google-site-verification" content="IpQpl6FjYVMkfh-EpoChgAtpCjFtoz_SO35uuRTUjcg" />
+
+  <meta property="og:type"             content="website" />
+  <meta property="og:url"              content="https://somynameisfajar.github.io/gabungplease/" />
+  <meta property="og:title"            content="Gabungplease — Gabung File Excel & CSV Offline, Gratis" />
+  <meta property="og:description"      content="Gabungkan ratusan file Excel dan CSV jadi satu dataset bersih. 100% offline, tidak ada data yang keluar dari PC kamu. Gratis selamanya." />
+  <meta property="og:image"            content="https://somynameisfajar.github.io/gabungplease/og-image.png" />
+  <meta property="og:locale"           content="id_ID" />
+  <meta property="og:locale:alternate" content="en_US" />
+  <meta property="og:site_name"        content="Gabungplease" />
+
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content="Gabungplease — Gabung File Excel & CSV Offline, Gratis" />
+  <meta name="twitter:description" content="Gabungkan ratusan file Excel dan CSV jadi satu dataset bersih. 100% offline, gratis selamanya." />
+  <meta name="twitter:image"       content="https://somynameisfajar.github.io/gabungplease/og-image.png" />
+  <meta name="twitter:creator"     content="@somynameisfajar" />
+
+  <title>Gabungplease — Gabung File Excel & CSV Offline, Gratis</title>
+  <link rel="canonical" href="https://somynameisfajar.github.io/gabungplease/" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Gabungplease",
+    "operatingSystem": "Windows",
+    "applicationCategory": "BusinessApplication",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "IDR"
+    },
+    "description": "Gabungkan ratusan file Excel dan CSV jadi satu dataset bersih dalam hitungan detik. 100% offline, tanpa internet, gratis selamanya.",
+    "url": "https://somynameisfajar.github.io/gabungplease/",
+    "downloadUrl": "https://github.com/somynameisfajar/gabungplease/releases/download/V1.0/Setup_Gabungplease.V1.0.exe",
+    "softwareVersion": "1.0",
+    "releaseNotes": "First public release",
+    "author": {
+      "@type": "Person",
+      "name": "Fajar Tri Ramadhan",
+      "url": "https://github.com/somynameisfajar"
+    },
+    "fileSize": "50MB",
+    "screenshot": "https://somynameisfajar.github.io/gabungplease/og-image.png",
+    "featureList": [
+      "Merge multiple Excel and CSV files offline",
+      "Deep XML cleaning",
+      "Date standardisation to YYYY-MM-DD",
+      "Duplicate row removal",
+      "Schema alignment across files",
+      "Parallel file processing"
+    ],
+    "inLanguage": ["id", "en"],
+    "isAccessibleForFree": true
+  }
+  </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <meta name="google-site-verification" content="IpQpl6FjYVMkfh-EpoChgAtpCjFtoz_SO35uuRTUjcg" />
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -34,7 +91,6 @@
       --text:        #e8e8e8;
       --text-dim:    #888888;
       --text-muted:  #555555;
-      --amber:       #c07818;
       --green:       #28a745;
     }
 
@@ -49,7 +105,6 @@
       overflow-x: hidden;
     }
 
-    /* ── NOISE OVERLAY ── */
     body::before {
       content: '';
       position: fixed;
@@ -60,7 +115,6 @@
       opacity: 0.4;
     }
 
-    /* ── GRID BACKGROUND ── */
     .grid-bg {
       position: fixed;
       inset: 0;
@@ -70,9 +124,9 @@
       background-size: 48px 48px;
       z-index: 0;
       mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 0%, transparent 70%);
+      -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 0%, transparent 70%);
     }
 
-    /* ── NAV ── */
     nav {
       position: fixed;
       top: 0; left: 0; right: 0;
@@ -83,6 +137,7 @@
       padding: 18px 48px;
       background: rgba(17,17,17,0.85);
       backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
     }
 
@@ -94,11 +149,7 @@
       color: var(--teal-bright);
     }
 
-    .nav-links {
-      display: flex;
-      gap: 32px;
-      list-style: none;
-    }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
 
     .nav-links a {
       color: var(--text-dim);
@@ -124,7 +175,6 @@
 
     .nav-dl:hover { background: #15807a; transform: translateY(-1px); }
 
-    /* ── HERO ── */
     .hero {
       position: relative;
       z-index: 1;
@@ -154,7 +204,8 @@
     }
 
     .badge-dot {
-      width: 6px; height: 6px;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
       background: var(--teal-bright);
       animation: pulse 2s ease infinite;
@@ -162,7 +213,7 @@
 
     @keyframes pulse {
       0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(0.7); }
+      50%       { opacity: 0.5; transform: scale(0.7); }
     }
 
     h1 {
@@ -206,7 +257,6 @@
       font-size: 1rem;
       font-weight: 600;
       transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
-      box-shadow: 0 0 0 0 rgba(26,158,150,0);
     }
 
     .btn-primary:hover {
@@ -236,7 +286,6 @@
       transform: translateY(-2px);
     }
 
-    /* ── MOCKUP ── */
     .mockup-wrap {
       position: relative;
       z-index: 1;
@@ -248,9 +297,11 @@
 
     .mockup-glow {
       position: absolute;
-      top: -60px; left: 50%;
+      top: -60px;
+      left: 50%;
       transform: translateX(-50%);
-      width: 500px; height: 200px;
+      width: 500px;
+      height: 200px;
       background: radial-gradient(ellipse, rgba(26,158,150,0.22) 0%, transparent 70%);
       pointer-events: none;
     }
@@ -272,10 +323,10 @@
       border-bottom: 1px solid var(--border);
     }
 
-    .dot { width: 10px; height: 10px; border-radius: 50%; }
-    .dot-r { background: #ff5f57; }
-    .dot-y { background: #ffbd2e; }
-    .dot-g { background: #28c840; }
+    .dot        { width: 10px; height: 10px; border-radius: 50%; }
+    .dot-r      { background: #ff5f57; }
+    .dot-y      { background: #ffbd2e; }
+    .dot-g      { background: #28c840; }
 
     .mockup-bar-title {
       flex: 1;
@@ -285,23 +336,18 @@
       color: var(--text-muted);
     }
 
-    .mockup-body {
-      padding: 28px 28px 20px;
-    }
+    .mockup-body { padding: 28px 28px 20px; }
 
-    /* mini UI inside mockup */
-    .m-header {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 20px;
-    }
+    .m-header { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
 
     .m-icon {
-      width: 40px; height: 40px;
+      width: 40px;
+      height: 40px;
       background: var(--teal-dim);
       border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .m-title-group h2 {
@@ -347,19 +393,16 @@
       margin-bottom: 14px;
     }
 
-    .m-check {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.72rem;
-      color: var(--text-dim);
-    }
+    .m-check { display: flex; align-items: center; gap: 8px; font-size: 0.72rem; color: var(--text-dim); }
 
     .m-check-box {
-      width: 14px; height: 14px;
+      width: 14px;
+      height: 14px;
       border-radius: 3px;
       background: var(--teal);
-      display: flex; align-items: center; justify-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       flex-shrink: 0;
     }
 
@@ -376,12 +419,7 @@
       font-family: 'DM Mono', monospace;
     }
 
-    .m-progress-track {
-      height: 6px;
-      background: #2a2a2a;
-      border-radius: 3px;
-      overflow: hidden;
-    }
+    .m-progress-track { height: 6px; background: #2a2a2a; border-radius: 3px; overflow: hidden; }
 
     .m-progress-fill {
       height: 100%;
@@ -392,8 +430,8 @@
     }
 
     @keyframes progressFill {
-      0% { width: 0%; }
-      60% { width: 72%; }
+      0%   { width: 0%; }
+      60%  { width: 72%; }
       100% { width: 100%; }
     }
 
@@ -410,13 +448,11 @@
       letter-spacing: 0.04em;
     }
 
-    /* ── STATS ── */
     .stats-row {
       position: relative;
       z-index: 1;
       display: flex;
       justify-content: center;
-      gap: 0;
       max-width: 700px;
       margin: 64px auto 0;
       border: 1px solid var(--border);
@@ -425,13 +461,7 @@
       background: var(--card);
     }
 
-    .stat {
-      flex: 1;
-      text-align: center;
-      padding: 28px 20px;
-      border-right: 1px solid var(--border);
-    }
-
+    .stat { flex: 1; text-align: center; padding: 28px 20px; border-right: 1px solid var(--border); }
     .stat:last-child { border-right: none; }
 
     .stat-num {
@@ -443,13 +473,8 @@
       margin-bottom: 6px;
     }
 
-    .stat-label {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      letter-spacing: 0.04em;
-    }
+    .stat-label { font-size: 0.78rem; color: var(--text-muted); letter-spacing: 0.04em; }
 
-    /* ── SECTIONS ── */
     section {
       position: relative;
       z-index: 1;
@@ -476,13 +501,8 @@
       margin-bottom: 20px;
     }
 
-    .section-desc {
-      color: var(--text-dim);
-      max-width: 500px;
-      line-height: 1.7;
-    }
+    .section-desc { color: var(--text-dim); max-width: 500px; line-height: 1.7; }
 
-    /* ── FEATURES ── */
     .features-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -494,39 +514,25 @@
       overflow: hidden;
     }
 
-    .feature-card {
-      background: var(--card);
-      padding: 32px 28px;
-      transition: background 0.2s;
-    }
-
+    .feature-card { background: var(--card); padding: 32px 28px; transition: background 0.2s; }
     .feature-card:hover { background: var(--card2); }
 
     .feature-icon {
-      width: 44px; height: 44px;
+      width: 44px;
+      height: 44px;
       border-radius: 10px;
       background: var(--teal-dim);
-      display: flex; align-items: center; justify-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       margin-bottom: 18px;
       font-size: 1.25rem;
     }
 
-    .feature-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 1rem;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
+    .feature-title { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+    .feature-desc  { font-size: 0.875rem; color: var(--text-dim); line-height: 1.6; }
 
-    .feature-desc { font-size: 0.875rem; color: var(--text-dim); line-height: 1.6; }
-
-    /* ── HOW IT WORKS ── */
-    .steps {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      margin-top: 56px;
-    }
+    .steps { display: flex; flex-direction: column; gap: 2px; margin-top: 56px; }
 
     .step {
       display: flex;
@@ -535,7 +541,7 @@
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 28px 28px;
+      padding: 28px;
       transition: border-color 0.2s;
     }
 
@@ -550,53 +556,10 @@
       min-width: 52px;
     }
 
-    .step-content h3 {
-      font-family: 'Syne', sans-serif;
-      font-size: 1.05rem;
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
+    .step-content h3 { font-family: 'Syne', sans-serif; font-size: 1.05rem; font-weight: 700; margin-bottom: 6px; }
+    .step-content p  { font-size: 0.875rem; color: var(--text-dim); line-height: 1.6; }
 
-    .step-content p { font-size: 0.875rem; color: var(--text-dim); line-height: 1.6; }
-
-    /* ── TERMINAL ── */
-    .terminal {
-      margin-top: 56px;
-      background: #0d0d0d;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-    }
-
-    .terminal-bar {
-      background: #141414;
-      padding: 12px 18px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .terminal-body {
-      padding: 24px 28px;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.82rem;
-      line-height: 2;
-    }
-
-    .t-comment { color: #444; }
-    .t-cmd { color: var(--teal-bright); }
-    .t-flag { color: #c07818; }
-    .t-file { color: #e8e8e8; }
-    .t-ok { color: var(--green); }
-
-    /* ── DONATE ── */
-    .donate-wrap {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-top: 40px;
-    }
+    .donate-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 40px; }
 
     .donate-card {
       display: flex;
@@ -613,23 +576,12 @@
 
     .donate-card:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
 
-    .donate-trakteer {
-      background: #2a0d16;
-      color: #f7748c;
-      border-color: rgba(229, 42, 83, 0.2);
-    }
-
-    .donate-paypal {
-      background: #001740;
-      color: #6ea8fe;
-      border-color: rgba(0, 48, 135, 0.4);
-    }
+    .donate-trakteer { background: #2a0d16; color: #f7748c; border-color: rgba(229,42,83,0.2); }
+    .donate-paypal   { background: #001740; color: #6ea8fe; border-color: rgba(0,48,135,0.4); }
 
     .donate-icon { font-size: 1.6rem; }
-
     .donate-meta { font-size: 0.72rem; opacity: 0.6; font-weight: 400; display: block; margin-top: 2px; }
 
-    /* ── FOOTER ── */
     footer {
       position: relative;
       z-index: 1;
@@ -638,45 +590,14 @@
       border-top: 1px solid var(--border);
     }
 
-    .footer-logo {
-      font-family: 'Syne', sans-serif;
-      font-size: 1.4rem;
-      font-weight: 500;
-      color: var(--teal-bright);
-      margin-bottom: 10px;
-    }
+    .footer-logo   { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 500; color: var(--teal-bright); margin-bottom: 10px; }
+    .footer-sub    { font-size: 1rem; color: var(--text-muted); font-family: 'DM Mono', monospace; margin-bottom: 24px; }
+    .footer-credit { font-size: 0.9rem; color: var(--text-muted); font-family: 'DM Mono', monospace; }
 
-    .footer-sub {
-      font-size: 1rem;
-      color: var(--text-muted);
-      font-family: 'DM Mono', monospace;
-      margin-bottom: 24px;
-    }
-
-    .footer-links {
-      display: flex;
-      justify-content: center;
-      gap: 24px;
-      list-style: none;
-      margin-bottom: 32px;
-    }
-
-    .footer-links a {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
+    .footer-links { display: flex; justify-content: center; gap: 24px; list-style: none; margin-bottom: 32px; }
+    .footer-links a { font-size: 0.8rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
     .footer-links a:hover { color: var(--teal-bright); }
 
-    .footer-credit {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      font-family: 'DM Mono', monospace;
-    }
-
-    /* ── DIVIDER ── */
     .teal-rule {
       position: relative;
       z-index: 1;
@@ -687,24 +608,14 @@
       opacity: 0.4;
     }
 
-    /* ── ANIMATIONS ── */
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(24px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    .reveal {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
+    .reveal         { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
 
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* ── RESPONSIVE ── */
     @media (max-width: 700px) {
       nav { padding: 14px 20px; }
       .nav-links { display: none; }
@@ -721,7 +632,6 @@
 
   <div class="grid-bg"></div>
 
-  <!-- NAV -->
   <nav>
     <div class="nav-logo">Gabungplease</div>
     <ul class="nav-links">
@@ -732,7 +642,6 @@
     <a href="https://github.com/somynameisfajar/gabungplease/releases/download/V1.0/Setup_Gabungplease.V1.0.exe" class="nav-dl">↓ Download</a>
   </nav>
 
-  <!-- HERO -->
   <div class="hero">
     <div class="hero-badge">
       <span class="badge-dot"></span>
@@ -742,7 +651,7 @@
     <h1>Merge files,<br><span class="h1-teal">Conveniently.</span></h1>
 
     <p class="hero-sub">
-      Gabungplease consolidates Dozens of Excel and CSV files into one clean dataset — with duplicate removal, date standardisation, and deep XML cleaning built in.
+      Gabungplease consolidates dozens of Excel and CSV files into one clean dataset — with duplicate removal, date standardisation, and deep XML cleaning built in.
     </p>
 
     <div class="hero-ctas">
@@ -752,7 +661,6 @@
       </a>
     </div>
 
-    <!-- MOCKUP -->
     <div class="mockup-wrap">
       <div class="mockup-glow"></div>
       <div class="mockup-window">
@@ -772,12 +680,10 @@
               <p>Convenient Data Consolidation Utility</p>
             </div>
           </div>
-
           <div class="m-input-row">
             <span class="m-input-text">C:\Users\Fajar\Desktop\Data_Bulanan\</span>
             <span class="m-btn-sm">Select Folder</span>
           </div>
-
           <div class="m-checks">
             <div class="m-check">
               <div class="m-check-box"><svg viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2"><polyline points="1.5,5 4,7.5 8.5,2"/></svg></div>
@@ -796,7 +702,6 @@
               Remove Duplicates
             </div>
           </div>
-
           <div class="m-progress-wrap">
             <div class="m-progress-label">
               <span>Reading files…</span>
@@ -806,43 +711,27 @@
               <div class="m-progress-fill"></div>
             </div>
           </div>
-
           <div class="m-merge-btn">CONSOLIDATE DATA</div>
         </div>
       </div>
     </div>
 
-    <!-- STATS -->
     <div class="stats-row">
-      <div class="stat">
-        <div class="stat-num">4+</div>
-        <div class="stat-label">File Formats</div>
-      </div>
-      <div class="stat">
-        <div class="stat-num">Dozens</div>
-        <div class="stat-label">of Files per Run</div>
-      </div>
-      <div class="stat">
-        <div class="stat-num">2</div>
-        <div class="stat-label">Languages</div>
-      </div>
-      <div class="stat">
-        <div class="stat-num">0</div>
-        <div class="stat-label">Dependencies to Install</div>
-      </div>
+      <div class="stat"><div class="stat-num">4+</div><div class="stat-label">File Formats</div></div>
+      <div class="stat"><div class="stat-num">Dozens</div><div class="stat-label">of Files per Run</div></div>
+      <div class="stat"><div class="stat-num">2</div><div class="stat-label">Languages</div></div>
+      <div class="stat"><div class="stat-num">0</div><div class="stat-label">Dependencies to Install</div></div>
     </div>
   </div>
 
   <div class="teal-rule"></div>
 
-  <!-- FEATURES -->
   <section id="features">
     <div class="reveal">
       <p class="section-label">What it does</p>
       <h2 class="section-title">Tedious task, made easy.</h2>
-      <p class="section-desc">Built for many of us, Less clicks, Less stress at your task.</p>
+      <p class="section-desc">Built for many of us. Less clicks, less stress at your task.</p>
     </div>
-
     <div class="features-grid reveal">
       <div class="feature-card">
         <div class="feature-icon">📂</div>
@@ -879,13 +768,11 @@
 
   <div class="teal-rule"></div>
 
-  <!-- HOW IT WORKS -->
   <section id="how">
     <div class="reveal">
       <p class="section-label">Workflow</p>
       <h2 class="section-title">Three steps.<br>One clean file.</h2>
     </div>
-
     <div class="steps reveal">
       <div class="step">
         <div class="step-num">01</div>
@@ -898,7 +785,7 @@
         <div class="step-num">02</div>
         <div class="step-content">
           <h3>Configure and consolidate</h3>
-          <p>Toggle deep cleaning, date standardisation, and duplicate removal. Click the big button. Gabungplease reads all matching files in parallel, aligns their columns automatically, and merges everything into one DataFrame.</p>
+          <p>Toggle deep cleaning, date standardisation, and duplicate removal. Click the big button. Gabungplease reads all matching files in parallel, aligns their columns automatically, and merges everything into one dataset.</p>
         </div>
       </div>
       <div class="step">
@@ -913,39 +800,30 @@
 
   <div class="teal-rule"></div>
 
-  <!-- SUPPORT -->
   <section id="support">
     <div class="reveal">
       <p class="section-label">Easy · Secure · Free forever</p>
       <h2 class="section-title">Support the work</h2>
       <p class="section-desc">Gabungplease is free and will stay free. If it saves you an hour of copy-pasting, consider buying the developer a coffee.</p>
     </div>
-
     <div class="donate-wrap reveal">
       <a href="https://trakteer.id/mynameisfajar" class="donate-card donate-trakteer" target="_blank" rel="noopener">
         <span class="donate-icon">☕</span>
-        <div>
-          Trakteer
-          <span class="donate-meta">GoPay · OVO · Dana · QRIS</span>
-        </div>
+        <div>Trakteer<span class="donate-meta">GoPay · OVO · Dana · QRIS</span></div>
       </a>
       <a href="https://www.paypal.com/ncp/payment/GQSK6BLX2YV4L" class="donate-card donate-paypal" target="_blank" rel="noopener">
         <span class="donate-icon">🌐</span>
-        <div>
-          PayPal
-          <span class="donate-meta">International · USD</span>
-        </div>
+        <div>PayPal<span class="donate-meta">International · USD</span></div>
       </a>
     </div>
   </section>
 
-  <!-- FOOTER -->
   <footer>
     <div class="footer-logo">Gabungplease</div>
     <div class="footer-sub">Concept by Fajar Tri Ramadhan (@somynameisfajar) · V1.0 Public Release</div>
     <ul class="footer-links">
       <li><a href="https://github.com/somynameisfajar/gabungplease">GitHub</a></li>
-      <li><a href="https://github.com/somynameisfajar/gabungplease/releases/download/V1.0/Setup_Gabungplease.V1.0.exe">Releases</a></li>
+      <li><a href="https://github.com/somynameisfajar/gabungplease/releases/download/V1.0/Setup_Gabungplease.V1.0.exe">Download</a></li>
       <li><a href="mailto:fajartriramadhan@gmail.com">Contact</a></li>
       <li><a href="https://trakteer.id/mynameisfajar">Donate</a></li>
     </ul>
@@ -953,7 +831,6 @@
   </footer>
 
   <script>
-    // Scroll reveal
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(e => {
         if (e.isIntersecting) {
